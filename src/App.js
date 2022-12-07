@@ -6,7 +6,13 @@ import { addUser, deleteUser, updateUsername } from './features/Users';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
+/* Icons */
+import { BsTrash } from "react-icons/bs";
+import { BsFillPencilFill } from "react-icons/bs";
 
 function App() {
   const dispatch = useDispatch();
@@ -14,70 +20,92 @@ function App() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [newUsername, setNewUsername] = useState("");
+  /* Modal */
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   
   return (
-      <Container>
-        <Row>
-          <input type="text" placeholder="Nombre" onChange={(event) => {setName(event.target.value)}}/>
-          <input type="text" placeholder="Usuario" onChange={(event) => {setUsername(event.target.value)}}/>
-          {/* Botton para añadir usuario y username */}
-          <button
-            onClick={() => {
-              dispatch(
-                addUser({
+      <Container className="main-container">
+        <Col className="mt-3 mb-4">
+          <h1>CRUD React & Redux</h1>
+          <h5>Crea, añade, edita o elimina nombres y usuarios.</h5>
+        </Col>
+        <Row className="justify-content-center">          
+          <Col md={5} sm="12">
+            <Form.Group>
+              <Form.Control className="mb-2" type="text" placeholder="Nombre" onChange={(event) => {setName(event.target.value)}}/>
+              <Form.Control className="mb-2" type="text" placeholder="Usuario" onChange={(event) => {setUsername(event.target.value)}}/>
+            </Form.Group>
+            <div className='d-grid gap-2'>
+              {/* ADD DATA */}
+              <Button variant="dark" onClick={() => {
+                dispatch(
+                  addUser({
                     id: userList[userList.length - 1].id + 1,
                     name,
                     username,
                   })
                 );
               }}>
-                Añadir
-          </button>
-        <Table striped bordered hover>
+              Añadir
+              </Button>
+            </div>         
+          </Col>
+        </Row>
+        <Table className="mt-4" striped bordered hover>
           <thead>
             <tr>
               <th>Nombre</th>
               <th>Username</th>
-              <th>Editar</th>
+              <th>Editar username</th>
               <th>Borrar</th>
             </tr>
           </thead>
           <tbody>
             {/* TODO:
-            Heading para decir añada un nuevo usuario
             Container width
             Background color
-            form control
-            botton
-            icons */}
+             */}
           {userList.map((user) => {
               return (
-                <>
+              <>
                 <tr>
                   <td>{user.name}</td>
                   <td>{user.username}</td>
-                  <td>
-                    <input type="text" placeholder="Editar usuario" onChange={(event) => {setNewUsername(event.target.value)}}/>              
-                    <button onClick={() => {
-                      dispatch(
-                        updateUsername({id: user.id, username: newUsername})
-                        );}}>
-                      Actualizar
-                    </button>
+                  <td className="text-center">
+                    {/* MODAL */}
+                    <Button variant="outline-primary"  onClick={handleShow}><BsFillPencilFill /></Button>
+                    <Modal show={show} onHide={handleClose}>
+                      <Modal.Header closeButton>
+                        <Modal.Title>Editar usuario</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        <Form.Control type="text" onChange={(event) => {setNewUsername(event.target.value)}}/>
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button variant="outline-primary" className="ms-3" onClick={() => {
+                          dispatch(
+                            updateUsername({id: user.id, username: newUsername})
+                            );}}>
+                              Actualizar
+                        </Button>
+                        <Button variant="success" onClick={handleClose}>Guardar y cerrar</Button>
+                      </Modal.Footer>
+                    </Modal>
                   </td>
-                  <td>
-                    <button
-                      onClick={() => {
+                  {/* DELETE DATA */}
+                  <td className="text-center">
+                    <Button variant="outline-danger" onClick={() => {
                         dispatch(deleteUser({id: user.id}));}}>
-                      Borrar
-                  </button>
+                      <BsTrash />
+                  </Button>
                   </td>
                 </tr> 
-                  </>
-                );})}
-            </tbody>
-          </Table>
-        </Row>
+              </>
+              );})}
+          </tbody>
+        </Table>
       </Container>
     );
 }
