@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 <strong>Preview</strong>
 
-![basic-crud-react.JPG]
+![](basic-crud-react.JPG)
 
 ## Available Scripts
 
