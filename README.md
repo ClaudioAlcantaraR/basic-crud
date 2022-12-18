@@ -6,6 +6,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ![](basic-crud-react.JPG)
 
+Live demo: https://peaceful-meringue-654860.netlify.app/
+
 ## Available Scripts
 
 In the project directory, you can run:
